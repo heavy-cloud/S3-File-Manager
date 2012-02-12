@@ -12,6 +12,9 @@ $path = $hd["X-File-Path"];
 $remote = $path.'/'.$name;
 $remote = str_replace('///','/',$remote);
 $remote = str_replace('//','/',$remote);
+if(substr($remote,0,1) == '/'){
+	$remote = substr($remote,1);
+}
 $s3->putObject(array('data'=>$data,'type'=>$type), SETTINGS_AWS_BUCKET, $remote, S3::ACL_PUBLIC_READ);
 
 //$temp = 'tmp/'.$name;

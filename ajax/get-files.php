@@ -10,6 +10,10 @@ if($path=='/'){
 }
 
 $list = $s3->getBucket(SETTINGS_AWS_BUCKET,$path,null,null,"/",true);
+if(is_bool($list)){
+	echo 'error';
+	die();
+}
 
 $out = array();
 

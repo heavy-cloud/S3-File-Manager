@@ -108,7 +108,8 @@ include("config/setup.inc");
 					if(uploader.qIndex < (uploader.uploadQueue.length)){
 						uploader.nextQueue();
 					}else{
-						$("#uploads").animate({height:0});
+						//$("#uploads").animate({height:0});
+						$("#uploads").slideUp();
 					}
 
 				});
@@ -193,6 +194,7 @@ include("config/setup.inc");
 				
 
 				$.get('ajax/get-files.php',{path:dir},function(data){
+					console.log(data);
 					if(data=='error'){
 						$("body").html('<div style="margin:auto;margin-top:50px;width:450px;"><h1>Could not connect to AWS</h1><p>Please check your Amazon account settings in the <strong>setup.inc</strong> file.</p></div>');
 					}else{
@@ -310,7 +312,7 @@ include("config/setup.inc");
 					$(".file-item").removeClass('selected-row');			
 				}
 				var path = $(this).attr('data-path');
-				$("#current_link").val('http://drop.adrd.co/'+escape(path));
+				$("#current_link").val('http://'+uploader.bucket_string+'.s3.amazonaws.com/'+escape(path));
 				$(this).addClass('selected-row');
 			});
 			$("#current_link").click(function(e){
