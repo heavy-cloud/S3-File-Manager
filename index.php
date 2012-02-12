@@ -193,47 +193,51 @@ include("config/setup.inc");
 				
 
 				$.get('ajax/get-files.php',{path:dir},function(data){
-					console.log(data);
-
-					$ul = $('<ul></ul>');
-					for(var i in data){
-						if(data[i].time>0){
-							var date = new Date(data[i].time*1000).format('M j, Y g:i A');
-						}else{
-							var date = '-';
-						}
-						var cclass = 'item-'+data[i].type;
-						var clickType = 'click-'+data[i].type;
-						if(data[i].type=='file'){
-							var parts = data[i].name.split('.');
-							var ext = parts[parts.length-1].toLowerCase();
-							switch(ext){
-								case 'png':
-								case 'gif':
-								case 'jpg':
-								case 'jpeg':
-								case 'tiff':
-									cclass='item-image';
-									break;
-								case 'zip':
-									cclass='item-zip';
-									break;
-								case 'psd':
-									cclass='item-psd';
-									break;
+					if(data=='error'){
+						$("body").html('<div style="margin:auto;margin-top:50px;width:450px;"><h1>Could not connect to AWS</h1><p>Please check your Amazon account settings in the <strong>setup.inc</strong> file.</p></div>');
+					}else{
+						console.log(data);
+	
+						$ul = $('<ul></ul>');
+						for(var i in data){
+							if(data[i].time>0){
+								var date = new Date(data[i].time*1000).format('M j, Y g:i A');
+							}else{
+								var date = '-';
 							}
+							var cclass = 'item-'+data[i].type;
+							var clickType = 'click-'+data[i].type;
+							if(data[i].type=='file'){
+								var parts = data[i].name.split('.');
+								var ext = parts[parts.length-1].toLowerCase();
+								switch(ext){
+									case 'png':
+									case 'gif':
+									case 'jpg':
+									case 'jpeg':
+									case 'tiff':
+										cclass='item-image';
+										break;
+									case 'zip':
+										cclass='item-zip';
+										break;
+									case 'psd':
+										cclass='item-psd';
+										break;
+								}
+							}
+							var html = '<li class="file-item '+clickType+'" data-path="'+data[i].path+'">'+
+							'<span class="file-icon '+cclass+'"></span>'+
+							'<span class="file-name">'+data[i].name+'</span>'+
+							'<span class="file-time">'+date+'</span>'+
+							'<span class="file-size">'+bytesToSize(data[i].size)+'</span>'+
+							'</li>';
+							$ul.append(html);
 						}
-						var html = '<li class="file-item '+clickType+'" data-path="'+data[i].path+'">'+
-						'<span class="file-icon '+cclass+'"></span>'+
-						'<span class="file-name">'+data[i].name+'</span>'+
-						'<span class="file-time">'+date+'</span>'+
-						'<span class="file-size">'+bytesToSize(data[i].size)+'</span>'+
-						'</li>';
-						$ul.append(html);
+						$("#files").html($ul);
+						uploader.setupDraggable();
+						uploader.hideLoader();
 					}
-					$("#files").html($ul);
-					uploader.setupDraggable();
-					uploader.hideLoader();
 
 				});
 			},
